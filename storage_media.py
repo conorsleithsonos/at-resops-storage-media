@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+
+# Author: Arthur Bayerlein
+# Repository: https://github.com/arthurbayerlein/Python/blob/master/storage_media.py
+#
+# Developed and tested using Python 3.5.1
+
+
 import os
 import subprocess
 
