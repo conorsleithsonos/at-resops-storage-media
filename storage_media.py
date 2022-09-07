@@ -79,7 +79,7 @@ class Mountpoint:
 
     @staticmethod
     def probe_mountpoints():
-        mount_output = str(subprocess.check_output(["mount"]), 'utf-8')
+        mount_output = str(subprocess.check_output(["sudo", "mount"]), 'utf-8')
         mountpoint_list = []
 
         for line in mount_output.split('\n'):
@@ -118,7 +118,7 @@ class MediaDevice:
         self.media_path = "/media/" + str(self.device_name)
 
         # Get partition
-        fdisk_output = str(subprocess.check_output(["fdisk", "-l", str(device)]), 'utf-8')
+        fdisk_output = str(subprocess.check_output(["sudo", "fdisk", "-l", str(device)]), 'utf-8')
         self.partition = fdisk_output.split("\n")[-2].split()[0].strip()
 
         # Find out if it is removable
@@ -166,15 +166,15 @@ class MediaDevice:
     # Output: True if mounting worked, False otherwise
     def mount_partition(self):
         if not self.is_mounted():
-            os.system("mkdir -p " + self.media_path)
-            os.system("mount %s %s" % (self.partition, self.media_path))
+            os.system("sudo mkdir -p " + self.media_path)
+            os.system("sudo mount %s %s -o uid=%s,gid=%s" % (self.partition, self.media_path, os.getlogin(), os.getlogin()))
             return self.is_mounted()
 
     # Unmounts device
     # Input: self
     # Output: True if unmounted successfully, False otherwise
     def unmount_partition(self):
-        os.system("umount " + self.media_path)
+        os.system("sudo umount " + self.media_path)
         return not self.is_mounted()
 
     #
